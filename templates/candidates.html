@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Candidates Applied</title>
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  >
+  <style>
+    body {
+      padding: 2rem;
+      background-color: #f8f9fa;
+    }
+    .card {
+      position: relative;
+      margin-bottom: 1rem;
+      border-radius: 10px;
+    }
+    .card.selected {
+      background-color: #e6ffed;
+      border: 2px solid #28a745;
+    }
+    .card.unselected {
+      background-color: #ffe6e6;
+      border: 2px solid #dc3545;
+    }
+    .card-title {
+      font-size: 1.25rem;
+      font-weight: bold;
+    }
+    .skills {
+      display: flex;
+      flex-wrap: wrap;
+    }
+    .skill-badge {
+      background-color: #17a2b8;
+      color: white;
+      border-radius: 20px;
+      padding: 5px 10px;
+      margin: 2px;
+      font-size: 0.9rem;
+    }
+    .recommended-badge {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      background: rgba(40, 167, 69, 0.1);
+      color: #28a745;
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.25rem;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+    .round-two-label {
+      position: absolute;
+      bottom: 0.5rem;
+      right: 0.5rem;
+      background: #28a745;
+      color: white;
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.25rem;
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <!-- Flash messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, msg in messages %}
+          <div class="alert alert-{{ 'success' if category=='success' else category }} alert-dismissible fade show" role="alert">
+            {{ msg }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <!-- Company header + count -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h2>Candidates for {{ current_company }}</h2>
+      <span class="badge bg-secondary">
+        {{ candidate_list|length }} total
+      </span>
+    </div>
+
+    {% if candidate_list %}
+      {% for candidate in candidate_list %}
+      <div class="card shadow-sm
+  {% if 'mail' in candidate %}
+    {% if candidate.mail %}selected{% else %}unselected{% endif %}
+  {% endif %}
+">
+
+        {% if candidate.is_recommended %}
+        <div class="recommended-badge">✨ AI Recommended</div>
+        {% endif %}
+        <div class="card-body">
+          <h5 class="card-title">{{ candidate.full_name }}</h5>
+          <p><strong>Job Role:</strong> {{ candidate.job_role }}</p>
+          <p><strong>Highest Qualification:</strong> {{ candidate.qualification }}</p>
+          <p><strong>Total Score:</strong> {{ candidate.total_score }}</p>
+
+          <p><strong>Skills:</strong></p>
+          <div class="skills">
+            {% for skill in candidate.skills %}
+              <span class="skill-badge">{{ skill }}</span>
+            {% endfor %}
+          </div>
+
+          {% if candidate.resume_link %}
+          <a
+            href="{{ candidate.resume_link }}"
+            target="_blank"
+            class="btn btn-outline-primary btn-sm mt-3"
+          >
+            📄 View Resume
+          </a>
+          {% else %}
+          <p class="text-muted mt-3">Resume not uploaded.</p>
+          {% endif %}
+
+          <div class="form-check mt-3">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              name="selected_candidates"
+              value="{{ candidate.applicant_id }}"
+              id="chk-{{ candidate.applicant_id }}"
+              {% if candidate.mail %}checked disabled{% endif %}
+            >
+            <label class="form-check-label" for="chk-{{ candidate.applicant_id }}">
+              Select Candidate
+            </label>
+          </div>
+
+          {% if candidate.mail %}
+          <div class="round-two-label">Selected for Round Two</div>
+          {% endif %}
+        </div>
+      </div>
+      {% endfor %}
+
+      <!-- Send Email button -->
+      <div class="d-flex justify-content-end my-4">
+        <button class="btn btn-success" onclick="sendEmail()">
+          📧 Send Email
+        </button>
+      </div>
+
+      <!-- Pagination by company -->
+      <nav aria-label="Company pagination">
+        <ul class="pagination justify-content-center">
+          <li class="page-item {% if company_idx == 0 %}disabled{% endif %}">
+            <a
+              class="page-link"
+              href="{{ url_for('candidates', company_idx=company_idx-1) }}"
+              tabindex="-1"
+            >← Previous</a>
+          </li>
+          <li class="page-item disabled">
+            <span class="page-link">
+              {{ company_idx + 1 }} / {{ total_companies }}
+            </span>
+          </li>
+          <li class="page-item {% if company_idx+1 >= total_companies %}disabled{% endif %}">
+            <a
+              class="page-link"
+              href="{{ url_for('candidates', company_idx=company_idx+1) }}"
+            >Next →</a>
+          </li>
+        </ul>
+      </nav>
+
+    {% else %}
+      <div class="alert alert-info mt-3">
+        No candidates have applied yet for {{ current_company }}.
+      </div>
+    {% endif %}
+  </div>
+
+  <script>
+    const companyIdx = {{ company_idx }};
+    function sendEmail() {
+      const selected = Array.from(
+        document.querySelectorAll('input[name="selected_candidates"]:checked:not([disabled])')
+      ).map(cb => cb.value);
+
+      if (selected.length === 0) {
+        alert("⚠️ Please select at least one candidate.");
+        return;
+      }
+
+      const params = new URLSearchParams();
+      selected.forEach(id => params.append("selected_ids", id));
+      params.append("company_idx", companyIdx);
+
+      window.location.href = `/send_email?${params.toString()}`;
+    }
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Education Qualifications</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f8f9fa;
+    }
+    .form-container {
+      margin-top: 50px;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+    .section-heading {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 20px;
+      color: #0d6efd;
+    }
+    .required {
+      color: red;
+    }
+    .upload-resume {
+      background-color: #e9f5ff;
+      padding: 15px;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-white">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">
+      <img src='{{ url_for("static", filename="image.png") }}' alt="HireSmart Logo" width="40" height="40">
+      <span class="ms-2">HireSmart</span>
+    </a>
+    <div class="d-flex">
+      <a href="{{ url_for('home') }}" class="btn btn-outline-primary me-2">Home</a>
+      <a href="{{ url_for('logout') }}" class="btn btn-primary">Logout</a>
+    </div>
+  </div>
+</nav>
+
+
+  
+<!-- Education Qualifications Form -->
+<div class="form-container">
+  <h2 class="text-center mb-4">Education Qualifications</h2>
+
+  <form action="{{ url_for('education_qualifications') }}" method="POST" enctype="multipart/form-data">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+    <!-- Applying For -->
+    <div class="mb-3">
+      <label for="applyingFor" class="form-label">Applying For <span class="required">*</span></label>
+      <select class="form-select" id="applyingFor" name="applyingFor" required>
+        <option value="Undergraduate">Undergraduate</option>
+        <option value="Graduate">Graduate</option>
+        <option value="Postgraduate">Postgraduate</option>
+      </select>
+    </div>
+
+    <!-- Highest Qualification -->
+    <div class="mb-3">
+      <label for="highestQualification" class="form-label">Highest Qualification <span class="required">*</span></label>
+      <select class="form-select" id="highestQualification" name="highestQualification" required>
+        <option value="">Select</option>
+        <option value="Undergraduate">Undergraduate</option>
+        <option value="Graduate">Graduate</option>
+        <option value="Postgraduate">Postgraduate</option>
+      </select>
+    </div>
+
+    <!-- Highest Qualification Completion Year -->
+    <div class="mb-3">
+      <label for="completionYear" class="form-label">Highest Qualification Completion Year <span class="required">*</span></label>
+      <input type="number" class="form-control" id="completionYear" name="completionYear" min="1900" max="2025" required>
+    </div>
+
+    <!-- Undergraduate Course Type -->
+    <div class="mb-3">
+      <label for="ugCourseType" class="form-label">Undergraduate Course Type <span class="required">*</span></label>
+      <select class="form-select" id="ugCourseType" name="ugCourseType" required>
+        <option value="Full Time">Full Time</option>
+        <option value="Part Time">Part Time</option>
+      </select>
+    </div>
+
+    <!-- 10th CGPA/Percentage -->
+    <div class="mb-3">
+      <label for="tenthMarks" class="form-label">10th CGPA/Percentage <span class="required">*</span></label>
+      <input type="text" class="form-control" id="tenthMarks" name="tenthMarks" required>
+    </div>
+
+    <!-- 10th Year of Passing -->
+    <div class="mb-3">
+      <label for="tenthYear" class="form-label">10th Year of Passing <span class="required">*</span></label>
+      <input type="date" class="form-control" id="tenthYear" name="tenthYear" required>
+    </div>
+
+    <!-- Higher Secondary Education -->
+    <div class="mb-3">
+      <label for="higherSecondary" class="form-label">Higher Secondary Education <span class="required">*</span></label>
+      <select class="form-select" id="higherSecondary" name="higherSecondary" required>
+        <option value="12th">12th</option>
+        <option value="Diploma">Diploma</option>
+      </select>
+    </div>
+
+    <!-- Undergraduate Degree Name -->
+    <div class="mb-3">
+      <label for="ugDegree" class="form-label">Undergraduate Degree Name <span class="required">*</span></label>
+      <input type="text" class="form-control" id="ugDegree" name="ugDegree" required>
+    </div>
+
+    <!-- Undergraduate Specialization/Branch -->
+    <div class="mb-3">
+      <label for="ugSpecialization" class="form-label">Undergraduate Specialization/Branch <span class="required">*</span></label>
+      <input type="text" class="form-control" id="ugSpecialization" name="ugSpecialization" required>
+    </div>
+
+    <!-- Undergraduate Percentage/CGPA -->
+    <div class="mb-3">
+      <label for="ugMarks" class="form-label">Undergraduate Percentage/CGPA <span class="required">*</span></label>
+      <input type="text" class="form-control" id="ugMarks" name="ugMarks" required>
+    </div>
+
+    <!-- Active Backlogs -->
+    <div class="mb-3">
+      <label for="activeBacklogs" class="form-label">Active Backlogs <span class="required">*</span></label>
+      <input type="number" class="form-control" id="activeBacklogs" name="activeBacklogs" min="0" required>
+    </div>
+
+    <!-- Postgraduate College Name -->
+    <div class="mb-3">
+      <label for="pgCollege" class="form-label">Postgraduate College Name</label>
+      <input type="text" class="form-control" id="pgCollege" name="pgCollege">
+    </div>
+
+    <!-- Postgraduate Year of Passing -->
+    <div class="mb-3">
+      <label for="pgYear" class="form-label">Postgraduate Year of Passing</label>
+      <input type="date" class="form-control" id="pgYear" name="pgYear">
+    </div>
+
+    <!-- Work Experience -->
+    <div class="mb-3">
+      <label for="workExperience" class="form-label">Do you have work experience? <span class="required">*</span></label>
+      <select class="form-select" id="workExperience" name="workExperience" required>
+        <option value="">Select</option>
+        <option value="Yes">Yes</option>
+        <option value="No">No</option>
+      </select>
+    </div>
+
+    <!-- Completed All Semester Exams -->
+    <div class="mb-3">
+      <label for="semesterExams" class="form-label">Have you completed all semester exams? <span class="required">*</span></label>
+      <select class="form-select" id="semesterExams" name="semesterExams" required>
+        <option value="Yes">Yes</option>
+        <option value="No">No</option>
+      </select>
+    </div>
+
+    <!-- Upload Resume -->
+    <div class="mb-3 upload-resume">
+      <label for="resume" class="form-label">Submit Your Resume <span class="required">*</span></label>
+      <input type="file" class="form-control" id="resume" name="resume" accept=".pdf,.doc,.docx" required>
+    </div>
+
+    <!-- Buttons -->
+    <div class="d-flex justify-content-between">
+      <a href="{{ url_for('profile_settings') }}" class="btn btn-secondary">Back</a>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+  </form>
+</div>
+
+</body>
+</html>

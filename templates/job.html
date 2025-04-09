@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ job.companyName }} - Job Details</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<div class="container mt-5">
+    <div class="card shadow p-4">
+        <div class="text-center">
+            <img src="{{ logo_url }}" alt="Company Logo" class="img-fluid mb-3" style="max-height: 100px;">
+            <h2 class="fw-bold">{{ job.companyName }}</h2>
+            <h5 class="text-muted mb-4">{{ job.companyLocation }}</h5>
+        </div>
+
+        <div class="mb-4">
+            <h4>🧑‍💻 Job Role: {{ job.jobRole }}</h4>
+            <p>📅 Deadline: <strong>{{ job.deadline }}</strong></p>
+            <h5 class="mt-4">📝 Job Description</h5>
+            <p>{{ job.jobDescription }}</p>
+        </div>
+
+        {% if not personal_info or not education_data %}
+        <div class="alert alert-warning text-center fw-bold">
+            ⚠️ Please complete your profile before applying for the job.
+        </div>
+        <div class="d-flex justify-content-center gap-3 mb-4">
+            <a href="javascript:history.back()" class="btn btn-secondary">🔙 Back</a>
+            <a href="/profile_settings" class="btn btn-primary">📝 Go to Profile</a>
+        </div>
+        {% else %}
+
+        <hr>
+
+        <div class="mb-4">
+            <h4 class="fw-bold">👤 Applicant Personal Info</h4>
+            <ul class="list-group">
+                <li class="list-group-item"><strong>Full Name:</strong> {{ personal_info.fullName }}</li>
+                <li class="list-group-item"><strong>Phone:</strong> {{ personal_info.phone }}</li>
+                <li class="list-group-item"><strong>Gender:</strong> {{ personal_info.gender }}</li>
+                <li class="list-group-item"><strong>DOB:</strong> {{ personal_info.dob }}</li>
+                <li class="list-group-item"><strong>Nationality:</strong> {{ personal_info.nationality }}</li>
+                <li class="list-group-item"><strong>Address:</strong> 
+                    {{ personal_info.address.line1 }},
+                    {{ personal_info.address.line2 }},
+                    {{ personal_info.address.city }},
+                    {{ personal_info.address.state }},
+                    {{ personal_info.address.country }} - {{ personal_info.address.zipCode }}
+                </li>
+            </ul>
+        </div>
+
+        <div>
+            <h4 class="fw-bold">🎓 Education Details</h4>
+            <ul class="list-group">
+                <li class="list-group-item"><strong>Highest Qualification:</strong> {{ education_data.highest_qualification }}</li>
+                <li class="list-group-item"><strong>Completion Year:</strong> {{ education_data.completion_year }}</li>
+                <li class="list-group-item"><strong>UG Degree:</strong> {{ education_data.ug_degree }} ({{ education_data.ug_specialization }})</li>
+                <li class="list-group-item"><strong>UG Marks:</strong> {{ education_data.ug_marks }}</li>
+                <li class="list-group-item"><strong>PG College:</strong> {{ education_data.pg_college }}</li>
+                <li class="list-group-item"><strong>PG Year:</strong> {{ education_data.pg_year }}</li>
+                <li class="list-group-item"><strong>Work Experience:</strong> {{ education_data.work_experience }}</li>
+                <li class="list-group-item"><strong>Tenth Marks:</strong> {{ education_data.tenth_marks }} ({{ education_data.tenth_year }})</li>
+                <li class="list-group-item"><strong>Higher Secondary:</strong> {{ education_data.higher_secondary }}</li>
+                <li class="list-group-item"><strong>Semester Exams:</strong> {{ education_data.semester_exams }}</li>
+                <li class="list-group-item"><strong>Active Backlogs:</strong> {{ education_data.active_backlogs }}</li>
+            </ul>
+        </div>
+
+        {% if education_data.resume_file_id %}
+        <div class="mt-4">
+            <a href="{{ url_for('get_resume', file_id=education_data.resume_file_id) }}" class="btn btn-outline-primary">📄 View Resume</a>
+        </div>
+        {% endif %}
+
+        <div class="mt-4 text-center">
+            <form action="{{ url_for('apply_job', job_id=job._id) }}" method="POST">
+                
+                <button type="submit" class="btn btn-success">✅ Apply Now</button>
+            </form>
+            
+        </div>
+
+        {% endif %}
+
+    </div>
+</div>
+
+</body>
+</html>
