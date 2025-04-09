@@ -34,9 +34,9 @@ csrf = CSRFProtect(app)
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = 'saviosunny48@gmail.com'          # Your Gmail address
-app.config['MAIL_PASSWORD'] = 'fnbk ipon vmqr oudm'  # App password
-app.config['MAIL_DEFAULT_SENDER'] = 'saviosunny@gmail.com'
+app.config['MAIL_USERNAME'] = 'saviosunncom'          # Your Gmail address
+app.config['MAIL_PASSWORD'] = 'fdm'  # App password
+app.config['MAIL_DEFAULT_SENDER'] = 's@gmail.com'
 
 mail = Mail(app)
 
@@ -45,7 +45,7 @@ app.config['UPLOAD_FOLDER'] = 'uploads'
 app.config['MAX_CONTENT_LENGTH'] = 5 * 1024 * 1024  # 5 MB
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)  # Create upload directory
 
-client = MongoClient("mongodb+srv://saviosunny48:2TJsNwpNwqJX2aG3@cluster0.0zmwv1l.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+client = MongoClient("mongodb+srv://s0.0zmwv1l.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
 db = client["HireSmart"]
 recruiters_collection = db["Recruiters"]
 jobs_collection = db["Jobs"]
@@ -407,7 +407,7 @@ def modify_job_description():
             return {"error": "No job description provided."}, 400
 
         # Instantiate the Gemini client using your API key
-        genai.configure(api_key="AIzaSyBYQg_PJ9y3ujnzhyUCRWa0EVUgqT3Q274") 
+        genai.configure(api_key="AIzaSyBYVUgqT3Q274") 
         
         # Prepare a system prompt to instruct Gemini
         system_prompt = (
